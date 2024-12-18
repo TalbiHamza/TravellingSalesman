@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --vert: #8ec1de;
+  --card: #fff8e6;
+}
+
+body {
+  background-image: url("/assets/bg2.webp");
+  background-size: cover; /* Ensures the image covers the whole screen */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-attachment: fixed;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
