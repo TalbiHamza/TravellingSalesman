@@ -9,6 +9,7 @@ const SolutionPage = () => {
   const cityNames = state?.data?.cityNames || [];
   const optimizedRoute = resultData?.tour || []; // This should now be an array of city names
   const totalDistance = resultData?.cost || 0;
+  const positions = state?.positions;
 
   // Check if optimizedRoute has valid data
   if (!optimizedRoute || optimizedRoute.length === 0) {
@@ -21,15 +22,15 @@ const SolutionPage = () => {
   );
 
   // Generate random coordinates for cities (for plotting purposes)
-  const n = cityNames.length;
+  /*const n = cityNames.length;
   const x_coords = Array.from({ length: n }, () => Math.random());
-  const y_coords = Array.from({ length: n }, () => Math.random());
+  const y_coords = Array.from({ length: n }, () => Math.random());*/
 
   // Prepare data for Plotly
   const plotData = [
     {
-      x: x_coords,
-      y: y_coords,
+      x: positions.map((p) => p.x),
+      y: positions.map((p) => p.y),
       mode: "markers+text",
       type: "scatter",
       text: cityNames,
@@ -53,29 +54,43 @@ const SolutionPage = () => {
     const nextCityIndex = cityNames.indexOf(
       optimizedRoute[i + 1] || optimizedRoute[0]
     );
-    plotData[1].x.push(x_coords[currentCityIndex], x_coords[nextCityIndex]);
-    plotData[1].y.push(y_coords[currentCityIndex], y_coords[nextCityIndex]);
+    plotData[1].x.push(
+      positions[currentCityIndex].x,
+      positions[nextCityIndex].x
+    );
+    plotData[1].y.push(
+      positions[currentCityIndex].y,
+      positions[nextCityIndex].y
+    );
   });
 
   return (
     <>
       <Navbar></Navbar>
-      <div className="h-screen grid grid-cols-2">
+      <div className="h-screen grid grid-cols-2 max-w-[1400px]">
         <div className="flex flex-col mt-36">
-          <h2 className="text-3xl font-bold mb-6">
+          <h2 className="text-4xl font-bold mb-6">
             Optimized Route and Total Distance
           </h2>
 
           {/* Display Optimized Route */}
           <div className="mb-4">
-            <h3 className="text-xl font-semibold">Optimized Route:</h3>
-            <p className="text-lg">{optimizedRouteNames.join(" → ")}</p>
+            <h3 className="text-2xl font-bold text-blue-800">
+              Optimized Route:
+            </h3>
+            <p className="text-lg font-bold">
+              {optimizedRouteNames.join(" → ")}
+            </p>
           </div>
 
           {/* Display Total Distance */}
           <div>
-            <h3 className="text-xl font-semibold">Total Distance:</h3>
-            <p className="text-lg">{totalDistance.toFixed(2)} kilometers</p>
+            <h3 className="text-2xl font-bold text-blue-800">
+              Total Distance:
+            </h3>
+            <p className="text-lg font-bold">
+              {totalDistance.toFixed(2)} kilometers
+            </p>
           </div>
         </div>
 
@@ -85,6 +100,8 @@ const SolutionPage = () => {
             layout={{
               title: "Optimal TSP Tour",
               showlegend: false,
+              paper_bgcolor: "#FFF3E0", // Background of the entire plot
+              plot_bgcolor: "#F5F5DC", // Background of the graphing area
               xaxis: {
                 showgrid: false,
                 zeroline: false,

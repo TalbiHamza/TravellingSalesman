@@ -9,7 +9,7 @@ const Csv = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { csvData } = location.state || {};
-  console.log(csvData);
+  console.log(csvData.positions);
 
   if (!csvData) return <div>no CSV data available</div>;
   const { cityNames, distMatrix, positions } = csvData;
@@ -40,14 +40,15 @@ const Csv = () => {
         name: "Distances",
       };
     });
+
     return (
       <Plot
         data={[traceCities, ...traceEdges]}
         layout={{
           title: "Cities and Connections",
           showlegend: false,
-          xaxis: { title: "X Coordinate" },
-          yaxis: { title: "Y Coordinate" },
+          xaxis: { range: [0, 1000] },
+          yaxis: { range: [0, 1000] },
           hovermode: "closest",
         }}
       />
@@ -81,6 +82,7 @@ const Csv = () => {
         state: {
           solutionData: resultData,
           data,
+          positions: csvData.positions,
         },
       });
     } catch (error) {
@@ -91,7 +93,7 @@ const Csv = () => {
   return (
     <>
       <Navbar />
-      <div className="mt-8">
+      <div className="mt-11">
         <table className="table-auto border-collapse border border-gray-300 overflow-auto w-full">
           <thead>
             <tr>
@@ -118,7 +120,7 @@ const Csv = () => {
                 {distMatrix[rowIndex].map((dist, colIndex) => (
                   <td
                     key={colIndex}
-                    className="border border-gray-300 p-2 text-center font-nunito text-gray-600"
+                    className="border border-gray-300 p-2 text-center font-semibold font-nunito text-gray-600"
                   >
                     {dist.toFixed(0)}
                   </td>
@@ -138,7 +140,7 @@ const Csv = () => {
             onClick={handleSubmit}
             className="px-4 py-2 bg-white hover:bg-amber-100 hover:scale-110 duration-500 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-300 text-"
           >
-            Solution{" "}
+            Solve the problem{" "}
           </button>
           {isModalOpen && (
             <div

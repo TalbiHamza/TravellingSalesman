@@ -40,6 +40,11 @@ const Form = () => {
     setDistances(updatedDistances);
   };
 
+  const positions = cityNames.map(() => ({
+    x: Math.random() * 1000,
+    y: Math.random() * 1000,
+  }));
+
   const handleSubmit = async () => {
     try {
       // Prepare data to send to Flask API
@@ -48,7 +53,6 @@ const Form = () => {
         distances: distances, // distances matrix
       };
       console.log(distances);
-      // Make POST request to Flask API
       const response = await fetch("http://127.0.0.1:5000/api/submit", {
         method: "POST",
         headers: {
@@ -62,11 +66,12 @@ const Form = () => {
       }
 
       const resultData = await response.json();
-      setResult(resultData.result); // Store the result from Flask API
+      setResult(resultData.result);
       navigate("/solution", {
         state: {
           solutionData: resultData,
           data,
+          positions,
         },
       });
     } catch (error) {
@@ -78,8 +83,8 @@ const Form = () => {
     <>
       <Navbar />
       <div className="h-screen grid grid-cols-2">
-        <div className="flex justify-center items-center mb-28">
-          <div className="bg-card overflow-y-auto max-h-[70vh] rounded-lg shadow-2xl p-8 max-w-lg w-full transform  transition-all duration-700 ease-out hover:scale-110 hover:shadow-3xl">
+        <div className="flex justify-center items-center mb-28 ">
+          <div className="bg-card overflow-y-auto max-h-[70vh] rounded-lg shadow-2xl p-8 max-w-xl w-full transform  transition-all duration-700 ease-out hover:scale-110 hover:shadow-3xl">
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
               Choose your cities
             </h2>
@@ -177,7 +182,7 @@ const Form = () => {
                                   }
                                   placeholder="Distance"
                                   min="0"
-                                  className="w-full p-2 border border-lime-600 rounded-md shadow-sm focus:ring-lime-800 focus:border-lime-800"
+                                  className="w-full min-w-16 p-2 border border-lime-600 rounded-md shadow-sm focus:ring-lime-800 focus:border-lime-800"
                                 />
                               )}
                             </td>
@@ -191,7 +196,7 @@ const Form = () => {
                   className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-700"
                   onClick={handleSubmit}
                 >
-                  Submit
+                  Solve the problem
                 </button>
               </div>
             )}
